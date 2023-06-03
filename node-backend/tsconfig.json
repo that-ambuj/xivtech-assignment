@@ -3,7 +3,7 @@
     "target": "es2016",
     "module": "commonjs",
     "baseUrl": "./",
-    "outDir": "./api",
+    "outDir": "./dist",
     "esModuleInterop": true,
     "forceConsistentCasingInFileNames": true,
 
