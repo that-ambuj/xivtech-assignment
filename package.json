@@ -4,7 +4,7 @@
   "version": "0.0.0",
   "type": "module",
   "scripts": {
-    "dev": "yarn concurrently new \"vite\" \"yarn --cwd node-backend dev\" ",
+    "dev": "yarn concurrently new \"vite\" \"vercel --cwd node-backend dev\" ",
     "build": "tsc && vite build && yarn --cwd node-backend build",
     "lint": "eslint src --ext ts,tsx --report-unused-disable-directives --max-warnings 0",
     "preview": "vite preview",

@@ -1,10 +1,6 @@
 import { ChangeEventHandler, useState } from "react";
 import { Icon } from "@iconify/react";
 
-const baseURL = import.meta.env.DEV
-  ? "http://localhost:8000"
-  : import.meta.env.BASE_URL;
-
 function WeatherComponent({ data }: { data?: Record<string, number> }) {
   return data ? (
     <div className="my-4 self-start">
@@ -48,7 +44,7 @@ function App() {
   };
 
   const getWeather = async () => {
-    const res = await fetch(`${baseURL}/api/getWeather`, {
+    const res = await fetch(`/api/getWeather`, {
       method: "POST",
       headers: {
         "Content-Type": "application/json",
@@ -69,7 +65,10 @@ function App() {
         </h1>
         <form
           className="flex flex-col my-5 max-w-xs md:max-w-md"
-          onSubmit={(ev) => ev.preventDefault()}
+          onSubmit={(ev) => {
+            ev.preventDefault();
+            getWeather();
+          }}
         >
           <div className="inline mb-1">
             Tip: Seperate city names by a comma(<b>,</b>) or a semicolon(
