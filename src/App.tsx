@@ -1,6 +1,10 @@
 import { ChangeEventHandler, useState } from "react";
 import { Icon } from "@iconify/react";
 
+const baseURL = import.meta.env.DEV
+  ? "http://localhost:8000"
+  : import.meta.env.BASE_URL;
+
 function WeatherComponent({ data }: { data?: Record<string, number> }) {
   return data ? (
     <div className="my-4 self-start">
@@ -44,7 +48,7 @@ function App() {
   };
 
   const getWeather = async () => {
-    const res = await fetch("/api/getWeather", {
+    const res = await fetch(`${baseURL}/api/getWeather`, {
       method: "POST",
       headers: {
         "Content-Type": "application/json",
