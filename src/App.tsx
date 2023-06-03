@@ -44,7 +44,7 @@ function App() {
   };
 
   const getWeather = async () => {
-    const res = await fetch("http://localhost:8000/api/getWeather", {
+    const res = await fetch("/api/getWeather", {
       method: "POST",
       headers: {
         "Content-Type": "application/json",
