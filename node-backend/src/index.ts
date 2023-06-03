@@ -13,8 +13,12 @@ const OPEN_WEATHER_API_KEY = process.env.OPEN_WEATHER_API_KEY;
 app.use(express.json());
 
 if (process.env.NODE_ENV?.match("dev")) {
-  app.use(cors({ origin: "http://localhost:5173" }));
+  app.use(cors());
 }
+
+app.get("/", (_, res) => {
+  res.json({ message: "Hello World" });
+});
 
 const WeatherRequestSchema = z.object({
   cities: z.array(z.string()).default([]),

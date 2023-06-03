@@ -4,7 +4,6 @@
   "main": "index.js",
   "license": "MIT",
   "scripts": {
-    "dev": "NODE_ENV=dev yarn ts-node-dev src/run.ts",
     "build": "tsc",
     "deploy": "vercel deploy"
   },
