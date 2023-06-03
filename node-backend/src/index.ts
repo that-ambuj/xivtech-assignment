@@ -1,4 +1,6 @@
 import express from "express";
+import type { ErrorRequestHandler } from "express";
+import cors from "cors";
 import fetch from "node-fetch";
 import z from "zod";
 import dotenv from "dotenv";
@@ -9,6 +11,10 @@ const app = express();
 const OPEN_WEATHER_API_KEY = process.env.OPEN_WEATHER_API_KEY;
 
 app.use(express.json());
+
+if (process.env.NODE_ENV?.match("dev")) {
+  app.use(cors({ origin: "http://localhost:5173" }));
+}
 
 const WeatherRequestSchema = z.object({
   cities: z.array(z.string()).default([]),
@@ -62,5 +68,13 @@ async function getWeatherByCity(
   const parsedData = await WeatherData.parseAsync(data);
   return parsedData;
 }
+
+// @ts-ignore
+const errorHandler: ErrorRequestHandler = (err, req, res, next) => {
+  console.error(err);
+  res.status(500).send({ message: err.message ?? "Something went wrong" });
+};
+
+app.use(errorHandler);
 
 export default app;
