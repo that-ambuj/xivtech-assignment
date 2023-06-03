@@ -1,9 +1,28 @@
 import { ChangeEventHandler, useState } from "react";
 import { Icon } from "@iconify/react";
 
+function WeatherComponent({ data }: { data?: Record<string, number> }) {
+  return data ? (
+    <div className="my-4 self-start">
+      <h2 className="text-lg font-semibold tracking-tight">Weather Data: </h2>
+      {Object.entries(data).map(([k, v], idx) => (
+        <div key={idx}>
+          <span className="font-medium">{k}</span>: {v}°C
+        </div>
+      ))}
+    </div>
+  ) : (
+    <></>
+  );
+}
+
 function App() {
   const [city, setCity] = useState<string>("");
   const [cities, setCities] = useState<string[]>([]);
+
+  const [weatherResponse, setWeatherResponse] = useState<
+    Record<string, number> | undefined
+  >();
 
   const handleCityInput: ChangeEventHandler<HTMLInputElement> = (event) => {
     const input = event.target.value;
@@ -18,15 +37,25 @@ function App() {
     }
 
     setCity(event.target.value);
-    console.log(cities);
   };
 
   const removeCity = (index: number) => {
     setCities(cities.filter((_, idx) => index !== idx));
   };
 
-  // TODO: fetch response from backend
-  const getWeather = () => {};
+  const getWeather = async () => {
+    const res = await fetch("http://localhost:8000/api/getWeather", {
+      method: "POST",
+      headers: {
+        "Content-Type": "application/json",
+      },
+      body: JSON.stringify({ cities: cities.length > 0 ? cities : [city] }),
+    });
+
+    const data = await res.json();
+
+    setWeatherResponse(data.weather);
+  };
 
   return (
     <div className="flex justify-center items-center h-screen">
@@ -34,42 +63,54 @@ function App() {
         <h1 className="md:text-4xl text-5xl font-semibold tracking-tight">
           Weather App
         </h1>
-        <form>
+        <form
+          className="flex flex-col my-5 max-w-xs md:max-w-md"
+          onSubmit={(ev) => ev.preventDefault()}
+        >
+          <div className="inline mb-1">
+            Tip: Seperate city names by a comma(<b>,</b>) or a semicolon(
+            <b>;</b>)
+          </div>
           <input
             type="text"
             name="cities"
             placeholder="Enter names of cities"
             value={city}
             onChange={handleCityInput}
-            className="rounded-lg my-5 bg-neutral-700 text-neutral-200 px-2 py-1"
+            className="rounded-lg bg-neutral-700 text-neutral-200 px-2 py-1"
           />
         </form>
-        <div className="flex flex-col items-center">
-          <div className="font-semibold text-white text-lg">
-            Selected Cities:
+        {cities.length > 0 ? (
+          <div className="flex flex-col items-start self-start">
+            <div className="font-semibold text-white text-lg">
+              Selected Cities:
+            </div>
+            <ul className="gap-2 max-w-xs">
+              {cities.map((cityName, idx) => {
+                return (
+                  <li
+                    key={idx}
+                    className="bg-slate-700 px-1.5 py-0.5  font-medium rounded-md items-center inline-flex my-1 ml-0 mr-1 gap-1"
+                  >
+                    {cityName}
+                    <button onClick={() => removeCity(idx)}>
+                      <Icon icon="ic:round-close" width={16} inline={true} />
+                    </button>
+                  </li>
+                );
+              })}
+            </ul>
           </div>
-          <ul className="gap-2 max-w-xs">
-            {cities.map((cityName, idx) => {
-              return (
-                <li
-                  key={idx}
-                  className="bg-slate-700 px-1.5 py-0.5 font-medium rounded-md items-center inline-flex my-1 mr-1 gap-1"
-                >
-                  {cityName}
-                  <button onClick={() => removeCity(idx)}>
-                    <Icon icon="ic:round-close" width={16} inline={true} />
-                  </button>
-                </li>
-              );
-            })}
-          </ul>
-        </div>
+        ) : (
+          <></>
+        )}
         <button
           onClick={() => getWeather()}
           className="bg-green-400 text-black font-medium tracking-tight text-lg mt-10 py-2 px-4 rounded-lg"
         >
           Fetch Weather
         </button>
+        <WeatherComponent data={weatherResponse} />
       </div>
     </div>
   );
