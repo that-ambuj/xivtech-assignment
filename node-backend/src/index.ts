@@ -70,7 +70,7 @@ async function getWeatherByCity(
 }
 
 // @ts-ignore
-const errorHandler: ErrorRequestHandler = (err, req, res, next) => {
+const errorHandler: ErrorRequestHandler = (err, _, res) => {
   console.error(err);
   res.status(500).send({ message: err.message ?? "Something went wrong" });
 };
