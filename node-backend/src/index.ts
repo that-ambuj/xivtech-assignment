@@ -1,10 +1,9 @@
 import express from "express";
 import z from "zod";
 
-const port = process.env.PORT || 8000;
 const app = express();
 
-app.get("/", (_, res) => {
+app.get("/api", (_, res) => {
   res.send("hello");
 });
 
@@ -17,6 +16,4 @@ app.post("/getWeather", async (req, res) => {
   const { cities } = await WeatherRequestSchema.parseAsync(req);
 });
 
-app.listen(port, () => {
-  console.log(`Express backend is running on http://localhost:${port}/`);
-});
+export default app;
