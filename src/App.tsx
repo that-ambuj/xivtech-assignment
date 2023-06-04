@@ -1,9 +1,16 @@
-import { ChangeEventHandler, useState } from "react";
+import { ChangeEventHandler, RefCallback, useState } from "react";
 import { Icon } from "@iconify/react";
+import { useAutoAnimate } from "@formkit/auto-animate/react";
 
-function WeatherComponent({ data }: { data?: Record<string, number> }) {
+function WeatherComponent({
+  data,
+  ref,
+}: {
+  data?: Record<string, number>;
+  ref: RefCallback<Element>;
+}) {
   return data ? (
-    <div className="my-4 self-start">
+    <div className="my-4 self-start" ref={ref}>
       <h2 className="text-lg font-semibold tracking-tight">Weather Data: </h2>
       {Object.entries(data).map(([k, v], idx) => (
         <div key={idx}>
@@ -23,6 +30,8 @@ function App() {
   const [weatherResponse, setWeatherResponse] = useState<
     Record<string, number> | undefined
   >();
+
+  const [parent] = useAutoAnimate();
 
   const handleCityInput: ChangeEventHandler<HTMLInputElement> = (event) => {
     const input = event.target.value;
@@ -88,7 +97,7 @@ function App() {
             <div className="font-semibold text-white text-lg">
               Selected Cities:
             </div>
-            <ul className="gap-2 max-w-sm">
+            <ul className="gap-2 max-w-sm" ref={parent}>
               {cities.map((cityName, idx) => {
                 return (
                   <li
@@ -113,7 +122,7 @@ function App() {
         >
           Fetch Weather
         </button>
-        <WeatherComponent data={weatherResponse} />
+        <WeatherComponent data={weatherResponse} ref={parent} />
       </div>
     </div>
   );
