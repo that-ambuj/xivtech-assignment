@@ -43,7 +43,7 @@ function App() {
     setCities(cities.filter((_, idx) => index !== idx));
   };
 
-  const getWeather = async () => {
+  async function getWeather() {
     const res = await fetch(`/api/getWeather`, {
       method: "POST",
       headers: {
@@ -55,7 +55,7 @@ function App() {
     const data = await res.json();
 
     setWeatherResponse(data.weather);
-  };
+  }
 
   return (
     <div className="flex justify-center items-center h-screen">
@@ -88,7 +88,7 @@ function App() {
             <div className="font-semibold text-white text-lg">
               Selected Cities:
             </div>
-            <ul className="gap-2 max-w-xs">
+            <ul className="gap-2 max-w-sm">
               {cities.map((cityName, idx) => {
                 return (
                   <li
