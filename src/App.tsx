@@ -39,7 +39,7 @@ function App() {
 
     // When a seperator character is entered, the entered city name
     // is appended to the `cities` array and the text input is cleared
-    if (last === "," || last === ";") {
+    if ((last === "," || last === ";") && city !== "") {
       setCities(cities.concat(city.substring(0, city.length)));
       setCity("");
       event.target.value = "";
@@ -63,7 +63,7 @@ function App() {
 
     const data = await res.json();
 
-    setWeatherResponse(data.weather);
+    setWeatherResponse({ ...weatherResponse, ...data.weather });
   }
 
   return (
